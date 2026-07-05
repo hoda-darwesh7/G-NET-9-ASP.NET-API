@@ -13,7 +13,8 @@ namespace ECommerce.Application.Common
 
         protected Result(bool isSuccess , IReadOnlyList<Error> errors )
         {
-            IsSuccess = isSuccess; 
+            IsSuccess = isSuccess;
+            Errors = errors ?? Array.Empty<Error>();
         }
 
         public static Result Ok() => new(true, Array.Empty<Error>());  
