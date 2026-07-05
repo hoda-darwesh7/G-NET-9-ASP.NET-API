@@ -1,4 +1,5 @@
 using ECommerce.API.Extensions;
+using ECommerce.Application;
 using ECommerce.Domain.Contracts;
 using ECommerce.Infrastructure;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ namespace ECommerce.API
 
             builder.Services.AddControllers();
             builder.Services.AddInfrastructureServices(builder.Configuration);
+            builder.Services.AddApplicationServices();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
