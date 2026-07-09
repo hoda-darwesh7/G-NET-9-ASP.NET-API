@@ -2,6 +2,7 @@
 using ECommerce.Application.Common;
 using ECommerce.Application.Contracts;
 using ECommerce.Application.DTOs.Products;
+using ECommerce.Application.Specification;
 using ECommerce.Domain.Contracts;
 using ECommerce.Domain.Entities.Products;
 
@@ -28,7 +29,9 @@ namespace ECommerce.Application.Services
 
         public async Task<Result<IReadOnlyList<ProductDto>>> GetAllProductsAsync(CancellationToken ct = default)
         {
-            var products = await _unitOfWork.GetRepository<Product , int>().GetAllAsync(ct);
+            var Spec = new ProductWithBrandAndTypeSpec();
+
+            var products = await _unitOfWork.GetRepository<Product , int>().GetAllAsync(Spec, ct);
 
             return Result<IReadOnlyList<ProductDto>>.Ok(_mapper.Map<IReadOnlyList<ProductDto>>(products));
         }
@@ -44,7 +47,9 @@ namespace ECommerce.Application.Services
 
         public async Task<Result<ProductDto>> GetProductByIdAsync(int id, CancellationToken ct = default)
         {
-            var product = await _unitOfWork.GetRepository<Product , int>().GetByIdAsync(id , ct);
+            var Spec = new ProductWithBrandAndTypeSpec(id);
+
+            var product = await _unitOfWork.GetRepository<Product, int>().GetByIdAsync(Spec, ct);
 
             if (product == null) 
                  return Error.NotFound("Product.NotFound" , $"Product With Id {id} is Not Found");
