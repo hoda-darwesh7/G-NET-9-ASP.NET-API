@@ -27,7 +27,6 @@ namespace ECommerce.Application.Specification
         {
             Criteria = criteria; 
         }
-
         protected void AddOrderBy(Expression<Func<TEntity, object>> orderByExp)
         {
             OrderBy = orderByExp;
@@ -35,6 +34,19 @@ namespace ECommerce.Application.Specification
         protected void AddOrderByDesc(Expression<Func<TEntity, object>> orderByDescExp)
         {
             OrderByDescending = orderByDescExp;
+        }
+
+        public int Skip {  get; private set; }
+
+        public int Take { get; private set; }
+
+        public bool IsPaginated { get; private set; }
+
+        public void ApplyPagination( int pageSize , int pageIndex)
+        {
+            IsPaginated = true;
+            Take = pageSize;
+            Skip = (pageIndex - 1) * pageSize;
         }
     }
 }

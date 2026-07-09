@@ -12,6 +12,19 @@ namespace ECommerce.Application.Common
         public int? TypeId { get; set; }
         public string? Search { get; set; }
         public ProductSortOptions Sort { get; set; }
+        public int PageIndex { get; set; } = 1;
+
+        private const int MaxPageSize = 10;
+        private const int defaultPageSize = 5;
+
+        private int pageSize;
+
+        public int PageSize
+        {
+            get => PageSize;
+            set => PageSize = value > MaxPageSize ? MaxPageSize : (value < 1 ? defaultPageSize : value);
+        }
+
 
     }
 }
