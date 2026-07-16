@@ -31,6 +31,7 @@ namespace ECommerce.Infrastructure
             });
 
             services.AddScoped<IBasketRepository, BasketRepository>();
+            services.AddScoped<ICacheRepository, CacheRepository>();
 
             return services;
         }
