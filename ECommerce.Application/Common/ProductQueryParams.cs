@@ -21,8 +21,8 @@ namespace ECommerce.Application.Common
 
         public int PageSize
         {
-            get => PageSize;
-            set => PageSize = value > MaxPageSize ? MaxPageSize : (value < 1 ? defaultPageSize : value);
+            get => pageSize;
+            set => pageSize = value > MaxPageSize ? MaxPageSize : (value < 1 ? defaultPageSize : value);
         }
 
 
