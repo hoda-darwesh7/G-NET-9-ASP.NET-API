@@ -1,4 +1,6 @@
-﻿using ECommerce.Domain.Contracts;
+﻿using ECommerce.Application.Contracts;
+using ECommerce.Application.Services;
+using ECommerce.Domain.Contracts;
 using ECommerce.Infrastructure.Data;
 using ECommerce.Infrastructure.DataSeeding;
 using ECommerce.Infrastructure.Repositories;
@@ -32,6 +34,7 @@ namespace ECommerce.Infrastructure
 
             services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddScoped<ICacheRepository, CacheRepository>();
+            services.AddScoped<ICacheService, CacheService>();
 
             return services;
         }

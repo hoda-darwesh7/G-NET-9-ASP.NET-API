@@ -9,6 +9,6 @@ namespace ECommerce.Application.Contracts
     public interface ICacheService
     {
         Task<string?> GetDataAsync(string cachekey , CancellationToken ct = default);
-        Task SetDataAsync(string cachekey , string cacheValue , TimeSpan? TimeToLive = default , CancellationToken ct = default);
+        Task SetDataAsync(string cachekey , object cacheValue , TimeSpan? TimeToLive = default , CancellationToken ct = default);
     }
 }

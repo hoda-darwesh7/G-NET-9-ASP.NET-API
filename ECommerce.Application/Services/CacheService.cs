@@ -22,9 +22,12 @@ namespace ECommerce.Application.Services
             => await _cacheRepo.GetAsync(cachekey, ct);
 
 
-        public async Task SetDataAsync(string cachekey, string cacheValue, TimeSpan? TimeToLive = null, CancellationToken ct = default)
+        public async Task SetDataAsync(string cachekey, object cacheValue, TimeSpan? TimeToLive = null, CancellationToken ct = default)
         {
-            var jsonValue = JsonSerializer.Serialize(cacheValue);
+            var jsonValue = JsonSerializer.Serialize(cacheValue , new JsonSerializerOptions()
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            });
             await _cacheRepo.SetAsync(cachekey, jsonValue, TimeToLive, ct);
         }
     }
