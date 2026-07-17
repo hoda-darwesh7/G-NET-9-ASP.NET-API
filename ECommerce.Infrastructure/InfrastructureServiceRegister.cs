@@ -4,7 +4,9 @@ using ECommerce.Domain.Contracts;
 using ECommerce.Infrastructure.Data;
 using ECommerce.Infrastructure.DataSeeding;
 using ECommerce.Infrastructure.Identity.Data;
+using ECommerce.Infrastructure.Identity.Entities;
 using ECommerce.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +37,7 @@ namespace ECommerce.Infrastructure
 
 
             services.AddKeyedScoped<IDataSeeder, CatalogDataSeeder>("Catalog");
+            services.AddKeyedScoped<IDataSeeder, IdentityDataSeeder>("Identity");
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddSingleton<IConnectionMultiplexer>(config =>
             {
@@ -44,6 +47,10 @@ namespace ECommerce.Infrastructure
             services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddScoped<ICacheRepository, CacheRepository>();
             services.AddScoped<ICacheService, CacheService>();
+
+            services.AddIdentityCore<ApplicationUser>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<StoreIdentityDbContext>();
 
             return services;
         }
