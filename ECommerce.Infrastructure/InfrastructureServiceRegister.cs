@@ -5,6 +5,7 @@ using ECommerce.Infrastructure.Data;
 using ECommerce.Infrastructure.DataSeeding;
 using ECommerce.Infrastructure.Identity.Data;
 using ECommerce.Infrastructure.Identity.Entities;
+using ECommerce.Infrastructure.Identity.Services;
 using ECommerce.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -46,11 +47,11 @@ namespace ECommerce.Infrastructure
 
             services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddScoped<ICacheRepository, CacheRepository>();
-            services.AddScoped<ICacheService, CacheService>();
 
             services.AddIdentityCore<ApplicationUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<StoreIdentityDbContext>();
+            services.AddScoped<IIdentityService, IdentityService>();
 
             return services;
         }
