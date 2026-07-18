@@ -2,6 +2,7 @@ using ECommerce.API.Extensions;
 using ECommerce.Application;
 using ECommerce.Domain.Contracts;
 using ECommerce.Infrastructure;
+using ECommerce.Infrastructure.Identity.Services;
 using System.Threading.Tasks;
 namespace ECommerce.API
 {
@@ -16,6 +17,7 @@ namespace ECommerce.API
             builder.Services.AddControllers();
             builder.Services.AddInfrastructureServices(builder.Configuration);
             builder.Services.AddApplicationServices();
+            builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JWT"));
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -33,6 +35,8 @@ namespace ECommerce.API
             }
 
             app.UseHttpsRedirection();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
