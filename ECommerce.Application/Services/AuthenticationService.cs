@@ -1,6 +1,6 @@
 ﻿using ECommerce.Application.Common;
 using ECommerce.Application.Contracts;
-using ECommerce.Application.DTOs.BasketDtos.IdentityDtos;
+using ECommerce.Application.DTOs.IdentityDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +38,23 @@ namespace ECommerce.Application.Services
             };
 
             return Result <UserDto>.Ok(loginUser);
-        } 
+        }
+
+        public async Task<Result<UserDto>> RegisterAsync(RegisterDto registerDto, CancellationToken ct = default)
+        {
+            var userResult = await _identityService.CreateUserAsync(registerDto, ct);
+            if (!userResult.IsSuccess)
+            {
+                return Result<UserDto>.Fail(userResult.Errors);
+            }
+
+            var user = userResult.data;
+            return Result<UserDto>.Ok(new UserDto()
+            {
+                Email = user.Email,
+                DisplayName = user.DisplayName,
+                Token = "Token"
+            });
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using ECommerce.Application.Contracts;
-using ECommerce.Application.DTOs.BasketDtos.IdentityDtos;
+using ECommerce.Application.DTOs.IdentityDtos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +17,13 @@ namespace ECommerce.API.Controllers
         [HttpPost("Login")]
         public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
             => ToActionResult(await _authService.LoginAsync(loginDto));
+
+
+
+        [HttpPost("register")]
+        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto , CancellationToken ct)
+            => ToActionResult(await _authService.RegisterAsync(registerDto , ct));
+
 
     }
 }

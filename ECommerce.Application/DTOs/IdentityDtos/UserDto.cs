@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ECommerce.Application.DTOs.BasketDtos.IdentityDtos
+namespace ECommerce.Application.DTOs.IdentityDtos
 {
     public class UserDto
     {
