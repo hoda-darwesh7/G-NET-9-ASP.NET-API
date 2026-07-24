@@ -1,6 +1,6 @@
 ﻿using ECommerce.Application.Common;
 using ECommerce.Application.Contracts;
-using ECommerce.Application.DTOs.BasketDtos.IdentityDtos;
+using ECommerce.Application.DTOs.IdentityDtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +12,12 @@ namespace ECommerce.Application.Services
     public class AuthenticationService : IAuthenticationService
     {
         private readonly IIdentityService _identityService;
+        private readonly ITokenService _tokenService;
 
-        public AuthenticationService(IIdentityService identityService)
+        public AuthenticationService(IIdentityService identityService , ITokenService tokenService)
         {
             _identityService = identityService;
+            _tokenService = tokenService;
         }
 
         public async Task<Result<UserDto>> LoginAsync(LoginDto loginDto , CancellationToken ct = default)
@@ -30,14 +32,38 @@ namespace ECommerce.Application.Services
             if (!passwordResult.data)
                 return Result<UserDto>.Fail(Error.Unauthorized("Invalid Email or Password"));
 
+            var user = userResult.data;
+            var rolesResult = await _identityService.GetUserRoles(user.Email);
+            var roles = rolesResult.data;
+            var token = _tokenService.CreateToken(user.Id , user.Email , user.UserName , roles);
             var loginUser = new UserDto()
             {
                 Email = loginDto.Email,
-                DisplayName = userResult.data.DisplayName,
-                Token = "Token"
+                DisplayName = user.DisplayName,
+                Token = token
             };
 
             return Result <UserDto>.Ok(loginUser);
-        } 
+        }
+
+        public async Task<Result<UserDto>> RegisterAsync(RegisterDto registerDto, CancellationToken ct = default)
+        {
+            var userResult = await _identityService.CreateUserAsync(registerDto, ct);
+            if (!userResult.IsSuccess)
+            {
+                return Result<UserDto>.Fail(userResult.Errors);
+            }
+
+            var user = userResult.data;
+            var rolesResult = await _identityService.GetUserRoles(user.Email);
+            var roles = rolesResult.data;
+            var token = _tokenService.CreateToken(user.Id, user.Email, user.UserName, roles);
+            return Result<UserDto>.Ok(new UserDto()
+            {
+                Email = user.Email,
+                DisplayName = user.DisplayName,
+                Token = token
+            });
+        }
     }
 }

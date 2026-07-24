@@ -1,5 +1,6 @@
 ﻿using ECommerce.Application.Common;
 using ECommerce.Application.Contracts;
+using ECommerce.Application.DTOs.IdentityDtos;
 using ECommerce.Infrastructure.Identity.Entities;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -31,6 +32,27 @@ namespace ECommerce.Infrastructure.Identity.Services
 
         }
 
+        public async Task<Result<IdentityUserResult>> CreateUserAsync(RegisterDto registerDto, CancellationToken ct = default)
+        {
+            var user = new ApplicationUser()
+            {
+                Email = registerDto.Email,
+                PhoneNumber = registerDto.PhoneNumber,
+                DisplayName = registerDto.DisplayName,
+                UserName = registerDto.UserName,
+            };
+
+            var result = await userManager.CreateAsync(user, registerDto.Password);
+            if (!result.Succeeded)
+            {
+                var errors = result.Errors.Select(e => new Error(e.Code, e.Description)).ToList();
+                return Result<IdentityUserResult>.Fail(errors);
+
+            }
+
+            return Result<IdentityUserResult>.Ok(new IdentityUserResult(user.Id , user.Email , user.UserName , user.DisplayName));
+        }
+
         public async Task<Result<IdentityUserResult>> FindUserByEmailAsync(string email, CancellationToken ct = default)
         {
             var user = await userManager.FindByEmailAsync(email);
@@ -38,6 +60,15 @@ namespace ECommerce.Infrastructure.Identity.Services
                 return Result<IdentityUserResult>.Fail(Error.NotFound("NotFoundError , User Not Found "));
             else
                 return Result<IdentityUserResult>.Ok(new IdentityUserResult (user.Id , user.DisplayName , user.Email , user.UserName));
+        }
+
+        public async Task<Result<IReadOnlyList<string>>> GetUserRoles(string email, CancellationToken ct = default)
+        {
+            var user = await userManager.FindByEmailAsync (email);
+            if (user is null)
+                return Result<IReadOnlyList<string>>.Fail(Error.NotFound("NotFound", "User Not Found"));
+            var Roles = await userManager.GetRolesAsync(user);
+            return Result < IReadOnlyList<string> > .Ok(Roles.ToList());
         }
     }
 }
